@@ -633,11 +633,13 @@ MSG
       # without rearranging it into the Sphinx order
       return instances if (options[:sql_order] || index_options[:sql_order])
 
-      ids.collect { |obj_id|
+      results = ids.collect { |obj_id|
         instances.detect do |obj|
           obj.primary_key_for_sphinx == obj_id
         end
       }
+      #added skip_stale option to clear nil results
+      options[:skip_stale] ? results.compact : results
     end
     
     # Group results by class and call #find(:all) once for each group to reduce
